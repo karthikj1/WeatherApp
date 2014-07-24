@@ -12,10 +12,12 @@
         class WeatherReader {
 
 
-            static final String forecastURLAddress = "http://api.wunderground.com/api/30c683619c2a884b/forecast10day/q/";
-            static final String URLAddress = "http://api.wunderground.com/api/30c683619c2a884b/conditions/q/";
-            static final String hourlyURLAddress = "http://api.wunderground.com/api/30c683619c2a884b/hourly10day/q/";
-
+        	// NOTE: YourKey needs to be replaced with a valid Weather Underground key to access their data
+        	
+            static final String forecastURLAddress = "http://api.wunderground.com/api/YourKey/forecast10day/q/";
+            static final String URLAddress = "http://api.wunderground.com/api/YourKey/conditions/q/";
+            static final String hourlyURLAddress = "http://api.wunderground.com/api/YourKey/hourly10day/q/";
+            
             static final String newLine = System.getProperty("line.separator");
 
             public WeatherReader()
