@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/HourlyScreen"
+        android:onClick="onHourlyScreenClick"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="1" android:gravity="left"
+        android:background="#f8f4ff">
+
+
+    <LinearLayout android:id="@+id/HourlyList"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  >
+        <LinearLayout android:id="@+id/hourlyItem"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <!-- This layout is cloned programmatically in HourlyItemLayout class
+                 Any changes to the structure below necessitates an update in the
+                 HourlyITemLayout class code. Changes to properties will flow through automatically
+                 -->
+
+                <TextView android:id="@+id/ForecastTime"
+                          android:text="@string/app_name"
+                          style="@style/HourlyForecastTextStyle"/>
+                <TextView android:id="@+id/weatherViewForecast"
+                          style="@style/HourlyForecastTextStyle"/>
+                <TextView android:id="@+id/TempForecast"
+                          style="@style/HourlyForecastTextStyle"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/rainProbLayout"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal">
+                <ImageView android:id="@+id/forecast"
+                           style="@style/HourlyForecastImageStyle"/>
+                <ImageView android:id="@+id/raindrop"
+                           android:src="@drawable/raindrop"
+                           style="@style/HourlyRaindropImageStyle"/>
+                <TextView android:id="@+id/rainProb"
+                          style="@style/HourlyForecastTextStyle"
+                          android:text="test"
+                          android:layout_toRightOf="@id/raindrop"/>
+            </LinearLayout>
+            <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/darker_gray"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

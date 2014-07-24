@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather</string>
+    <string name = "Button_Txt">Get Weather</string>
+    <string name = "Default_City"></string>
+    <string name = "CitySelectHint">Enter City name</string>
+    <string name = "citySelectPrompt">Enter City: </string>
+</resources>

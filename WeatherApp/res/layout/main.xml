@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <RelativeLayout android:id="@+id/MainScreen"
+                        android:visibility="gone"
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:weightSum="1" android:gravity="left"
+                        android:background="#f8f4ff">
+
+            <LinearLayout android:id="@+id/headerLayout"
+                          android:onClick="switchCity"
+                          android:layout_width="match_parent"
+                          android:layout_height="30dp"
+                          android:orientation="horizontal"
+                          android:gravity="center_vertical"
+                          android:visibility="invisible">
+
+                <TextView android:id="@+id/cityView"
+                          android:layout_width="0dp"
+                          android:layout_height="match_parent"
+                          android:text="City"
+                          android:gravity="left"
+                          android:layout_weight="1"
+                          style="@style/TimeDisplayStyle"/>
+
+                <TextView android:id="@+id/coordView"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"
+                          android:text="Lat"
+                          android:gravity="right"
+                          style="@style/TimeDisplayStyle"/>
+            </LinearLayout>
+
+
+            <LinearLayout android:id="@+id/citySelectLayout"
+                          android:layout_width="match_parent"
+                          android:layout_marginTop="@dimen/citySelectPadding"
+                          android:orientation="horizontal"
+                          android:layout_height="30dp"
+                          android:visibility="visible">
+
+                <TextView
+                        style="@style/MinMaxTempTextStyle"
+                        android:textSize="@dimen/CitySelectSize"
+                        android:text="@string/citySelectPrompt"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/citySelect"/>
+
+                <EditText android:id="@+id/citySelect"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="wrap_content"
+                          android:textSize="@dimen/CitySelectSize"
+                          android:singleLine="true"
+                          android:imeOptions="actionDone"
+                          android:background="#f8f4ff"
+                          android:text="@string/Default_City"
+                          android:hint="@string/CitySelectHint"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentLeft="true"
+                          android:paddingTop="@dimen/citySelectPadding"/>
+
+                <ImageView android:id="@+id/refresh"
+                           android:onClick="refreshButtonClicked"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:src="@drawable/refresh"
+                           android:layout_centerVertical="true"
+                           android:layout_toRightOf="@id/citySelect"/>
+            </LinearLayout>
+
+            <RelativeLayout android:id="@+id/CurrentWeatherLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/citySelectLayout">
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/lineSeparator1"
+                        android:background="@android:color/darker_gray"/>
+
+                <TextView android:id="@+id/timeView"
+                          android:text="9:45"
+                          android:layout_below="@+id/lineSeparator1"
+                          android:layout_marginTop="10dp"
+                          style="@style/TimeDisplayStyle"/>
+
+                <TextView android:id="@+id/tempView"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/timeView"
+                          android:text="5 C"
+                          android:textSize="@dimen/TemperatureDisplaySize"
+                          android:textColor="@android:color/black" android:background="#f8f4ff"/>
+
+                <ImageView android:id="@+id/weatherIcon"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_below="@id/tempView"
+                           android:layout_centerVertical="true"
+                        />
+
+                <TextView android:id="@+id/weatherView"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/weatherIcon"
+                          android:text="Random"
+                          android:textSize="@dimen/SmallDisplaySize"
+                          android:textColor="@android:color/black" android:background="#f8f4ff"/>
+
+                <TextView android:id="@+id/humidity"
+                          android:layout_width="100dp"
+                          android:layout_height="wrap_content"
+                          android:text="Humidity:"
+                          android:layout_below="@+id/weatherView" android:layout_alignParentLeft="true"
+                          android:textColor="@android:color/black" android:background="#f8f4ff"
+                          android:textSize="@dimen/SmallDisplaySize"/>
+
+                <TextView android:id="@+id/FeelsLike"
+                          style="@style/MinMaxTempTextStyle"
+                          android:text=""
+                          android:layout_below="@+id/humidity" android:layout_alignParentLeft="true"
+                          android:layout_marginTop="@dimen/margins"
+                          android:layout_marginRight="20dp"/>
+
+                <ImageView android:id="@+id/TWCLogo"
+                           android:src="@drawable/twc_logo"
+                           android:layout_alignParentRight="true"
+                           android:layout_alignBottom="@id/FeelsLike"
+                           style="@style/ForecastImageStyle"/>
+
+                <View android:id="@+id/lineSeparator2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="2dp"
+                      android:layout_marginTop="5dp"
+                      android:layout_below="@id/FeelsLike"
+                      android:background="@android:color/darker_gray"/>
+            </RelativeLayout>
+
+            <LinearLayout android:id="@+id/ForecastHeading"
+                          android:layout_width="match_parent"
+                          android:layout_marginTop="20dp"
+                          android:orientation="horizontal"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/CurrentWeatherLayout">
+                <TextView
+                        android:text="Forecast"
+                        style="@style/ForecastTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"/>
+
+                <TextView android:id="@+id/UpdateTime"
+                          style="@style/ForecastTextStyle"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="wrap_content"
+                          android:gravity="right"/>
+
+            </LinearLayout>
+
+            <View android:id="@+id/lineSeparator3"
+                  android:layout_width="wrap_content"
+                  android:layout_height="2dp"
+                  android:layout_below="@id/ForecastHeading"
+                  android:layout_marginTop="5dp"
+                  android:background="@android:color/darker_gray"/>
+
+            <LinearLayout android:id="@+id/ForecastLayoutParent"
+                          android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:gravity="center_horizontal"
+                          android:orientation="horizontal"
+                          android:layout_below="@id/lineSeparator3"
+                          android:background="#f8f4ff">
+
+                <LinearLayout android:id="@+id/ForecastLayout1"
+                              style="@style/ForecastLinearLayoutStyle"
+                              android:onClick="ForecastLayoutClicked">
+                    <TextView android:id="@+id/ForecastDow1"
+                              style="@style/ForecastTextStyle"/>
+
+                    <ImageView android:id="@+id/forecast1"
+                               style="@style/ForecastImageStyle"/>
+                    <TextView android:id="@+id/minTempForecast1"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/maxTempForecast1"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/weatherViewForecast1"
+                              style="@style/WeatherForecastTextStyle"/>
+                    <RelativeLayout android:id="@+id/rainProbLayout1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <ImageView android:id="@+id/raindrop1"
+                                   android:src="@drawable/raindrop"
+                                   style="@style/RaindropImageStyle"/>
+                        <TextView android:id="@+id/rainProb1"
+                                  style="@style/ForecastTextStyle"
+                                  android:layout_toRightOf="@id/raindrop1"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+                <View android:id="@+id/fls1"
+                      style="@style/ForecastSeparatorStyle"
+                      android:layout_toRightOf="@id/ForecastLayout1"/>
+
+                <LinearLayout android:id="@+id/ForecastLayout2"
+                              android:onClick="ForecastLayoutClicked"
+                              android:layout_toRightOf="@id/ForecastLayout1"
+                              style="@style/ForecastLinearLayoutStyle">
+                    <TextView android:id="@+id/ForecastDow2"
+                              style="@style/ForecastTextStyle"/>
+
+                    <ImageView android:id="@+id/forecast2"
+                               style="@style/ForecastImageStyle"/>
+
+                    <TextView android:id="@+id/minTempForecast2"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/maxTempForecast2"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/weatherViewForecast2"
+                              style="@style/WeatherForecastTextStyle"/>
+
+                    <RelativeLayout android:id="@+id/rainProbLayout2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <ImageView android:id="@+id/raindrop2"
+                                   android:src="@drawable/raindrop"
+                                   style="@style/RaindropImageStyle"/>
+                        <TextView android:id="@+id/rainProb2"
+                                  style="@style/ForecastTextStyle"
+                                  android:layout_toRightOf="@id/raindrop2"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View android:id="@+id/fls2"
+                      style="@style/ForecastSeparatorStyle"
+                      android:layout_toRightOf="@id/ForecastLayout2"/>
+
+                <LinearLayout android:id="@+id/ForecastLayout3"
+                              android:onClick="ForecastLayoutClicked"
+                              android:layout_toRightOf="@id/ForecastLayout2"
+                              style="@style/ForecastLinearLayoutStyle">
+                    <TextView android:id="@+id/ForecastDow3"
+                              style="@style/ForecastTextStyle"/>
+
+                    <ImageView android:id="@+id/forecast3"
+                               style="@style/ForecastImageStyle"/>
+                    <TextView android:id="@+id/minTempForecast3"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/maxTempForecast3"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/weatherViewForecast3"
+                              style="@style/WeatherForecastTextStyle"/>
+
+                    <RelativeLayout android:id="@+id/rainProbLayout3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <ImageView android:id="@+id/raindrop3"
+                                   android:src="@drawable/raindrop"
+                                   style="@style/RaindropImageStyle"/>
+                        <TextView android:id="@+id/rainProb3"
+                                  style="@style/ForecastTextStyle"
+                                  android:layout_toRightOf="@id/raindrop3"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View android:id="@+id/fls3"
+                      style="@style/ForecastSeparatorStyle"
+                      android:layout_toRightOf="@id/ForecastLayout3"/>
+
+                <LinearLayout android:id="@+id/ForecastLayout4"
+                              android:onClick="ForecastLayoutClicked"
+                              android:layout_toRightOf="@id/ForecastLayout3"
+                              style="@style/ForecastLinearLayoutStyle">
+
+                    <TextView android:id="@+id/ForecastDow4"
+                              style="@style/ForecastTextStyle"/>
+
+                    <ImageView android:id="@+id/forecast4"
+                               style="@style/ForecastImageStyle"/>
+                    <TextView android:id="@+id/minTempForecast4"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/maxTempForecast4"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/weatherViewForecast4"
+                              style="@style/WeatherForecastTextStyle"/>
+
+                    <RelativeLayout android:id="@+id/rainProbLayout4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <ImageView android:id="@+id/raindrop4"
+                                   android:src="@drawable/raindrop"
+                                   style="@style/RaindropImageStyle"/>
+                        <TextView android:id="@+id/rainProb4"
+                                  style="@style/ForecastTextStyle"
+                                  android:layout_toRightOf="@id/raindrop4"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View android:id="@+id/fls4"
+                      style="@style/ForecastSeparatorStyle"
+                      android:layout_toRightOf="@id/ForecastLayout4"/>
+
+                <LinearLayout android:id="@+id/ForecastLayout5"
+                              android:onClick="ForecastLayoutClicked"
+                              android:layout_toRightOf="@id/ForecastLayout4"
+                              style="@style/ForecastLinearLayoutStyle">
+                    <TextView android:id="@+id/ForecastDow5"
+                              style="@style/ForecastTextStyle"/>
+
+                    <ImageView android:id="@+id/forecast5"
+                               style="@style/ForecastImageStyle"/>
+                    <TextView android:id="@+id/minTempForecast5"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/maxTempForecast5"
+                              style="@style/ForecastTextStyle"/>
+                    <TextView android:id="@+id/weatherViewForecast5"
+                              style="@style/WeatherForecastTextStyle"/>
+
+                    <RelativeLayout android:id="@+id/rainProbLayout5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <ImageView android:id="@+id/raindrop5"
+                                   android:src="@drawable/raindrop"
+                                   style="@style/RaindropImageStyle"/>
+                        <TextView android:id="@+id/rainProb5"
+                                  style="@style/ForecastTextStyle"
+                                  android:layout_toRightOf="@id/raindrop5"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View android:id="@+id/fls5"
+                      style="@style/ForecastSeparatorStyle"
+                      android:layout_toRightOf="@id/ForecastLayout5"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout android:id="@+id/splash"
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="center_vertical|center_horizontal"
+                      android:visibility="visible">
+
+            <ProgressBar
+                    android:id="@+id/progressBar1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    />
+            <TextView
+                    android:text="Loading. Please wait ... "
+                    android:textSize="@dimen/TemperatureDisplaySize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"/>
+
+        </LinearLayout>
+        <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent">
+            <RelativeLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/HourlyScreen"
+                    android:onClick="onHourlyScreenClick"
+                    android:visibility="gone"
+                    android:layout_below="@id/citySelectLayout"
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:weightSum="1" android:gravity="left"
+                    android:background="#f8f4ff">
+
+                <LinearLayout android:id="@+id/HourlyList"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                        >
+                    <LinearLayout android:id="@+id/hourlyItem"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:visibility="gone"
+                                  android:orientation="vertical">
+
+                        <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                            <!-- This layout is cloned programmatically in HourlyItemLayout class
+                             Any changes to the structure below necessitates an update in the
+                             HourlyITemLayout class code. Changes to properties will flow through automatically
+                             -->
+
+                            <TextView android:id="@+id/ForecastTime"
+                                      android:text="@string/app_name"
+                                      style="@style/HourlyForecastTextStyle"/>
+                            <ImageView android:id="@+id/forecast"
+                                       style="@style/HourlyForecastImageStyle"/>
+                            <TextView android:id="@+id/weatherViewForecast"
+                                      style="@style/HourlyForecastTextStyle"/>
+                            <TextView android:id="@+id/TempForecast"
+                                      style="@style/HourlyForecastTextStyle"/>
+                            <ImageView android:id="@+id/raindrop"
+                                       android:src="@drawable/raindrop"
+                                       style="@style/HourlyRaindropImageStyle"/>
+                            <TextView android:id="@+id/rainProb"
+                                      style="@style/HourlyForecastTextStyle"
+                                      android:text="test"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</ScrollView>
