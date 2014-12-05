@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ForecastTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">#f8f4ff</item>
+        <item name="android:textSize">@dimen/SmallDisplaySize</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name = "android:layout_marginTop">15dp</item>
+    </style>
+    <style name="WeatherForecastTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">25sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">#f8f4ff</item>
+        <item name="android:textSize">@dimen/SmallDisplaySize</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name = "android:layout_marginTop">15dp</item>
+    </style>
+    <style name="MinMaxTempTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">#f8f4ff</item>
+        <item name="android:textSize">@dimen/SmallDisplaySize</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+    <style name="ForecastImageStyle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal|center_vertical</item>
+        <item name = "android:layout_marginTop">15dp</item>
+    </style>
+
+    <style name="RaindropImageStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name = "android:layout_marginTop">15dp</item>
+    </style>
+    <style name="ForecastSeparatorStyle">
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_toRightOf">@id/forecast1</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+    <style name="ForecastLinearLayoutStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name = "android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name = "android:orientation">vertical</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    <style name="TimeDisplayStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">#f8f4ff</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:textSize">@dimen/TimeDisplaySize</item>
+    </style>
+
+    <style name="HourlyForecastImageStyle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">top|center_vertical</item>
+    </style>
+
+    <style name="HourlyRaindropImageStyle">
+    <item name="android:layout_width">30dp</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">top|center_vertical</item>
+    </style>
+    <style name="HourlyForecastTextStyle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">#f8f4ff</item>
+        <item name="android:textSize">@dimen/SmallDisplaySize</item>
+        <item name="android:gravity">bottom|center_vertical</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="TemperatureDisplaySize">25sp</dimen>
+    <dimen name="TimeDisplaySize">12sp</dimen>
+    <dimen name="SmallDisplaySize">10sp</dimen>
+    <dimen name="CitySelectSize">12sp</dimen>
+    <dimen name="citySelectPadding">10sp</dimen>
+    <dimen name = "margins">10dp</dimen>
+</resources>
