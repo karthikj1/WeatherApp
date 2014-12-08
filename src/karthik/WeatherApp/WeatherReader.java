@@ -16,9 +16,12 @@ class WeatherReader {
     static final String forecastURLAddress = "http://api.wunderground.com/api/" + APIKEY + "/forecast10day/q/";
     static final String URLAddress = "http://api.wunderground.com/api/" + APIKEY + "/conditions/q/";
     static final String hourlyURLAddress = "http://api.wunderground.com/api/" + APIKEY + "/hourly10day/q/";
+    static final String geoLookupAddress = "http://api.wunderground.com/api/" + APIKEY + "/geolookup/q/";
     
     static final String newLine = System.getProperty("line.separator");
 
+    static final String TAG = "WeatherReader";
+    
     public WeatherReader()
     {            }
 
@@ -62,7 +65,7 @@ class WeatherReader {
         return new KJ_JSONObject(data.toString());
     }
 
-    public static KJ_JSONObject getJSONData(String displayCity) throws IOException, KJ_JSONException {
+    public static KJ_JSONObject getWeatherData(String displayCity) throws IOException, KJ_JSONException {
 
         String address = URLAddress.concat(removeWhiteSpace(displayCity)).concat(".json");
         return getJSONData(new URL(address));
@@ -138,6 +141,32 @@ class WeatherReader {
 
     }
 
+    public static String getGeoLookupCity(double latitude, double longitude)
+    	throws IOException, KJ_JSONException{
+    // use WeatherUnderground API to do Geolookup and find nearest city based on 
+    // latitude and longitude. Returns "" if nothing found
+    	String city;
+    	String address = geoLookupAddress + latitude + "," + longitude +".json";
+    	
+    	Log.i(TAG, "Making JSON Query to " + address);
+    	KJ_JSONObject geoLookupData = getJSONData(new URL(address));
+    	KJ_JSONObject locData = geoLookupData.getJSONObject("response");
+    	
+    	if(locData.has("error")){
+			Log.i(TAG, locData.getJSONObject("error")
+					.getString("description") + " while performing GeoLookup");
+			return "";
+    	}
+    	locData = geoLookupData.getJSONObject("location");
+    	// get city and state if in US, otherwise get city and country
+    	if (locData.getString("country_iso3166").equalsIgnoreCase("US")) 
+    		city = locData.getString("city") + "," + locData.getString("state");
+    	else
+    		city = locData.getString("city") + "," + locData.getString("country");
+    	
+    	return city;
+    }
+    
     private static MainWeatherObject getSingleHourlyObject(KJ_JSONArray rawArrayData, int ctr) throws KJ_JSONException
     {
         MainWeatherObject hourObj = new MainWeatherObject("",0);
@@ -160,13 +189,17 @@ class WeatherReader {
 
     private static String removeWhiteSpace(String loc)
     {
-    // remove whitespace since Weather Underground API doesn't seem to like that
-        StringBuffer trimmedLoc = new StringBuffer("");
+    // replaces whitespace with underscore since Weather Underground API 
+    //	doesn't seem to like whitespace
+    	
+/*        StringBuffer trimmedLoc = new StringBuffer("");
 
         for(int i = 0; i < loc.length(); i++)
             if(!Character.isWhitespace(loc.charAt(i)))
                 trimmedLoc.append(loc.charAt(i));
         return trimmedLoc.toString();
+*/
+    	return loc.replaceAll("\\s+", "_");
     }
 
 }
