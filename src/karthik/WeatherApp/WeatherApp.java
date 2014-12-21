@@ -46,23 +46,19 @@ public class WeatherApp extends Activity implements
 	private final String weatherForecastDescName = "weatherViewForecast";
 	private final String ForecastDowName = "ForecastDow";
 	private final String rainProbName = "rainProb";
-	private final String ForecastParentName = "ForecastLayoutParent";
+//	private final String ForecastParentName = "ForecastLayoutParent";
 
 	final String degree = "\u00b0";
 
 	private TextView timeView, tempView, cityView, coordView, FeelsLike,
 			humidityView, mainWeatherDesc, updateTime;
-	private LinearLayout citySelectLayout, headerLayout, splash,
-			ForecastLayoutParent;
+	private LinearLayout citySelectLayout, headerLayout, splash;
+			
 	private LinearLayout hourlyList, hourlyItem;
 	private RelativeLayout mainScreen, HourlyScreen, currentWeatherLayout;
 
 	private Thread dtThread, weatherThread;
-
-	private final SimpleDateFormat sdf = new SimpleDateFormat(
-			"dd MMM, yyyy HH:mm:ss a");
-	private Calendar cdr;
-	private long lastUpdate;
+	long lastUpdate;
 
 	private ImageView refreshImage;
 	private EditText citySelect;
@@ -70,7 +66,7 @@ public class WeatherApp extends Activity implements
 
 	final int numDaysForecast = 5;
 	final String defaultCity = "NewYork";
-	private String displayCity = defaultCity;
+	private String displayCity = "";
 
 	MainWeatherObject weatherData = new MainWeatherObject("", 0);
 	MainWeatherObject[] forecastArray = new MainWeatherObject[numDaysForecast];
@@ -97,6 +93,7 @@ public class WeatherApp extends Activity implements
 		keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		getResIDs();
 
+		dtThread = new DateTimeThread(this, timeView, updateTime);
 		mLocationClient = new LocationClient(this, this, this);
 	}
 
@@ -115,14 +112,12 @@ public class WeatherApp extends Activity implements
 	protected void onPause() {
 		super.onPause();
 		dtThread.interrupt();
-		dtThread = null;
 		weatherThread.interrupt();
 		weatherThread = null;
 	}
 
 	protected void onResume() {
 		super.onResume();
-		defineDTThread();
 		getWeatherAndForecast();
 		dtThread.start();
 	}
@@ -146,8 +141,6 @@ public class WeatherApp extends Activity implements
 		splash = (LinearLayout) findViewById(R.id.splash);
 		mainScreen = (RelativeLayout) findViewById(R.id.MainScreen);
 		currentWeatherLayout = (RelativeLayout) findViewById(R.id.CurrentWeatherLayout);
-
-		ForecastLayoutParent = (LinearLayout) findViewById(R.id.ForecastLayoutParent);
 
 		mainWeatherDesc = (TextView) findViewById(R.id.weatherView);
 		weatherIcon = (ImageView) findViewById(R.id.weatherIcon);
@@ -317,7 +310,7 @@ public class WeatherApp extends Activity implements
 
 	private void getWeatherAndForecast() {
 		weatherThread = new Thread(new WeatherRunnable(this));
-		Toast.makeText(this, "Refreshing", Toast.LENGTH_LONG);
+		Toast.makeText(this, "Refreshing", Toast.LENGTH_SHORT).show();
 		weatherThread.start();
 	}
 
@@ -390,50 +383,6 @@ public class WeatherApp extends Activity implements
 				dlgAlert.create();
 				dlgAlert.show();
 			}
-		});
-	}
-
-	private void defineDTThread() {
-		dtThread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				while (!Thread.currentThread().isInterrupted()) {
-					try {
-						update();
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-
-			public void update() {
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						cdr = Calendar.getInstance();
-						timeView.setText(sdf.format(cdr.getTime()));
-						long timeSinceLastWeatherUpdate = (System
-								.currentTimeMillis() - lastUpdate) / 1000;
-						String updateString = "";
-						if (timeSinceLastWeatherUpdate < 60)
-							updateString = String
-									.valueOf(timeSinceLastWeatherUpdate)
-									+ " seconds";
-						else {
-							long mins = timeSinceLastWeatherUpdate / 60;
-							updateString = String.valueOf(mins) + " minute"
-									+ String.valueOf(mins > 1 ? "s" : "");
-						}
-
-						updateTime.setText("Updated " + updateString + " ago");
-					}
-
-				});
-			}
-
 		});
 	}
 
