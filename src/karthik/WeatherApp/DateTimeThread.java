@@ -3,9 +3,12 @@ package karthik.WeatherApp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.util.Log;
 import android.widget.TextView;
 
 class DateTimeThread extends Thread {
+	private static final String TAG = "WeatherAppDateTimeThread";
+	
 	private WeatherApp mActivity;
 	private TextView timeView, updateTime;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
@@ -26,6 +29,7 @@ class DateTimeThread extends Thread {
 				update();
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
+				Log.v(TAG, "DateTimeThread interrupted");
 			}
 		}
 	}

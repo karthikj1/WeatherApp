@@ -4,13 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
 
 import karthik.json.KJ_JSONArray;
 import karthik.json.KJ_JSONException;
@@ -19,8 +14,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,9 +28,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
+
 public class WeatherApp extends Activity implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		ConnectionCallbacks, OnConnectionFailedListener {
 
 	private final String TAG = "WeatherApp";
 	protected final String forecastImageName = "forecast";
@@ -46,7 +44,6 @@ public class WeatherApp extends Activity implements
 	private final String weatherForecastDescName = "weatherViewForecast";
 	private final String ForecastDowName = "ForecastDow";
 	private final String rainProbName = "rainProb";
-//	private final String ForecastParentName = "ForecastLayoutParent";
 
 	final String degree = "\u00b0";
 
@@ -80,11 +77,10 @@ public class WeatherApp extends Activity implements
 	private HashMap<String, View> forecastDowViews;
 	private HashMap<String, View> rainProbViews;
 
-	// used for Location services
-	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-	private LocationClient mLocationClient;
+	// used for location services using new Location API
+	private GoogleApiClient mGoogleApiClient;
 	private Location mLocation;
-
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -93,25 +89,32 @@ public class WeatherApp extends Activity implements
 		keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		getResIDs();
 
-		dtThread = new DateTimeThread(this, timeView, updateTime);
-		mLocationClient = new LocationClient(this, this, this);
+		 mGoogleApiClient = new GoogleApiClient.Builder(this)
+		 .addConnectionCallbacks(this)
+		 .addOnConnectionFailedListener(this)
+		 .addApi(LocationServices.API)
+		 .build();
 	}
 
 	protected void onStart() {
 		super.onStart();
 		// Connect the client.
-		mLocationClient.connect();
+		mGoogleApiClient.connect();
 	}
 
     protected void onStop() {
-        // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
         super.onStop();
+        
+        // Disconnecting the client invalidates it.
+    	if (mGoogleApiClient.isConnected()) {
+    		mGoogleApiClient.disconnect();
+    	}
     }
     
 	protected void onPause() {
 		super.onPause();
 		dtThread.interrupt();
+		dtThread = null;
 		weatherThread.interrupt();
 		weatherThread = null;
 	}
@@ -119,6 +122,7 @@ public class WeatherApp extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		getWeatherAndForecast();
+		dtThread = new DateTimeThread(this, timeView, updateTime);
 		dtThread.start();
 	}
 
@@ -459,9 +463,9 @@ public class WeatherApp extends Activity implements
 				return;
 			}
 
-			if (mLocationClient.isConnected()) {
+			if (mGoogleApiClient.isConnected()) {
 				// first try to get nearest city using Location services
-				mLocation = mLocationClient.getLastLocation();
+				mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 				try {
 					displayCity = WeatherReader.getGeoLookupCity(
 							mLocation.getLatitude(), mLocation.getLongitude());
@@ -560,88 +564,33 @@ public class WeatherApp extends Activity implements
 	 */
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-
-		// Choose what to do based on the request code
-		switch (requestCode) {
-
-		// If the request code matches the code sent in onConnectionFailed
-		case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-
-			switch (resultCode) {
-			// If Google Play services resolved the problem
-			case Activity.RESULT_OK:
-
-				// Log the result
-				Log.d(TAG, "Connected to Location services");
-				break;
-
-			// If any other result was returned by Google Play services
-			default:
-				// Log the result
-				Log.d(TAG, "Location services not resolved - result code "
-						+ resultCode);
-				break;
-			}
-
-			// If any other request code was received
-		default:
-			// Report that this Activity received an unknown requestCode
-			Log.d(TAG, "Received unknown request code " + requestCode);
-			break;
-		}
+	public void onConnected(Bundle connectionHint) {
+		Log.v(TAG, "Location services connected");
 	}
 
-	public void onConnected(Bundle dataBundle) {
-		Log.i(TAG, "Connected to Location services");
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		// Refer to the javadoc for ConnectionResult to see what error codes
+		// might be returned in
+		// onConnectionFailed.
+		Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
+				+ result.getErrorCode());
 	}
 
 	/*
-	 * Called by Location Services if the connection to the location client
-	 * drops because of an error.
+	 * Called by Google Play services if the connection to GoogleApiClient drops
+	 * because of an error.
 	 */
-	@Override
 	public void onDisconnected() {
-		// Display the connection status
-		Log.i(TAG, "Disconnected. Location information no longer available.");
+		Log.v(TAG, "Location services disconnected");
 	}
 
-	/*
-	 * Called by Location Services if the attempt to Location Services fails.
-	 */
 	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-		/*
-		 * Google Play services can resolve some errors it detects. If the error
-		 * has a resolution, try sending an Intent to start a Google Play
-		 * services activity that can resolve error.
-		 */
-		if (connectionResult.hasResolution()) {
-			try {
-				// Start an Activity that tries to resolve the error
-				connectionResult.startResolutionForResult(this,
-						CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
-			} catch (IntentSender.SendIntentException e) {
-				// Log the error
-				Log.e(TAG,
-						"Error when connecting to Location Services "
-								+ e.getMessage());
-			}
-		} else {
-			/*
-			 * If no resolution is available, display a toast to the user with
-			 * the error.
-			 */
-			Log.e(TAG,
-					"Unrecoverable error when connecting to Location Services "
-							+ connectionResult.getErrorCode());
-			this.finish();
-		}
+	public void onConnectionSuspended(int cause) {
+		// The connection to Google Play services was lost for some reason. We
+		// call connect() to
+		// attempt to re-establish the connection.
+		Log.i(TAG, "Location services connection suspended");
+		mGoogleApiClient.connect();
 	}
-
 }
