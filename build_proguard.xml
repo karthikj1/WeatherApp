@@ -88,12 +88,13 @@
     -->
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml"/>
+    
     <!-- Add below to enable ProGuard -->
     <target name="-debug-obfuscation-check"> 
-	<!-- enable proguard even in debug mode -->
-	<property name="proguard.enabled" value="true"/> 
+		<!-- enable proguard even in debug mode -->
+		<property name="proguard.enabled" value="true"/> 
 
-	<path id="out.dex.jar.input.ref" />
-   </target>
+		<path id="out.dex.jar.input.ref" />
+   	</target>
 
 </project>

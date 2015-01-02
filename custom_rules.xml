@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules">
+    <property name="adb.device.arg" value="-d" />
+    <property name="config.target.path" value="src/karthik/WeatherApp" />
+    <property name="config.target.file" value="Config.java" />
+
+    <target name="-pre-build">
+        <echo level = "info">Running -pre-build to replace APIKEY property</echo>
+
+        <!--  We set the APIKEY in our local.properties file using a line as below 
+        	config.apikey = <apikey_value>
+        	 -->
+    	<replace file="${config.target.path}/${config.target.file}" token="@CONFIG.APIKEY@" value="${config.apikey}"/>   
+    </target>
+    
+    <!-- This is reading the template file and overwriting our build path equivalent file -->
+    
+    <target name="-post-build" >
+       <echo level = "info">Running -post-build to replace Config.java with template</echo>
+       <copy encoding="utf-8" file="${config.target.file}"
+            overwrite="true" todir="${config.target.path}" > 
+       </copy>
+    </target>
+    
+</project>

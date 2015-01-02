@@ -11,8 +11,8 @@ import karthik.json.*;
 
 class WeatherReader {
 
-	// NOTE: APIKEY needs to be replaced with a valid Weather Underground key to access their data
-	static final String APIKEY = "";
+	static final String APIKEY = Config.APIKEY;
+	
     static final String forecastURLAddress = "http://api.wunderground.com/api/" + APIKEY + "/forecast10day/q/";
     static final String URLAddress = "http://api.wunderground.com/api/" + APIKEY + "/conditions/q/";
     static final String hourlyURLAddress = "http://api.wunderground.com/api/" + APIKEY + "/hourly10day/q/";

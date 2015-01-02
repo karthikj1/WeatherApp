@@ -16,7 +16,7 @@
 -dontobfuscate
 -allowaccessmodification
 
--whyareyoukeeping class com.google.android.gms.analytics.**
+#-whyareyoukeeping class com.google.android.gms.analytics.**
 
 # removing the line below makes the build fail
 -dontwarn com.google.android.gms.common.**
